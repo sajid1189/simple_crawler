@@ -10,3 +10,9 @@ class STORAGE_OPTIONS(Enum):
 STORAGE = STORAGE_OPTIONS.local_files
 
 FETCH_EXTERNAL = False
+
+DOWNLOADABLE_QUEUE_IP = "localhost"
+OUTLINKS_QUEUE_IP = "localhost"
+
+DOWNLOADABLE_QUEUE = "download_test_123"
+OUTLINKS_QUEUE = "outlinks_test_123"
