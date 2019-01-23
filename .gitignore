@@ -18,7 +18,7 @@ venv3/
 *.sock
 *.sqlite
 *.sqlite3
-
+*.html
 .coverage
 celerybeat-schedule
 _chameleon*.scss

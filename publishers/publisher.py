@@ -1,6 +1,6 @@
 import pika
 from settings import settings
-
+import redis
 from settings.shared import DOWNLOADED_LINKS
 
 if __name__ == '__main__':
@@ -8,6 +8,8 @@ if __name__ == '__main__':
 connection = pika.BlockingConnection(pika.ConnectionParameters(host=settings.OUTLINKS_QUEUE_IP))
 channel = connection.channel()
 channel.queue_declare(queue=settings.OUTLINKS_QUEUE)
+
+rds = redis.Redis(host='localhost', port=6379, db=0)
 
 
 def check_and_publish(ch, method, properties, body):
@@ -22,15 +24,14 @@ def check_and_publish(ch, method, properties, body):
     """
 
     # Check if the link is already downloaded i.e.,if it exists in the global set
-    if body not in DOWNLOADED_LINKS:
-        print("DOWNLOADED_LINKS len {} ".format(len(DOWNLOADED_LINKS)))
+    if body not in rds:
         con = pika.BlockingConnection(pika.ConnectionParameters(host=settings.DOWNLOADABLE_QUEUE_IP))
         ch = con.channel()
         ch.queue_declare(queue=settings.DOWNLOADABLE_QUEUE)
 
         ch.basic_publish(exchange="", routing_key=settings.DOWNLOADABLE_QUEUE, body=body)
         con.close()
-        DOWNLOADED_LINKS.add(body)
+        rds.set(body, 1)
     else:
         print("not in set")
     print("publishing {}".format(body))
