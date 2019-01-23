@@ -19,8 +19,8 @@ class Soup:
             self.external_links = set()
             self.internal_links = set()
             self.absolute_internal_links = set()
-            self.links = set()
             self.url = response.url
+            self._all_links = set()
         except:
             self.soup = None
 
@@ -46,9 +46,9 @@ class Soup:
             current_urlparsed_obj = urlparse(self.url)
             for link in self.get_all_links():
 
-                urlparsed_obj = urlparse(link.get('href', ""))
+                urlparsed_obj = urlparse(link)
                 if current_urlparsed_obj.netloc != urlparsed_obj.netloc and urlparsed_obj.netloc != "":
-                    self.external_links.add(link.get('href'))
+                    self.external_links.add(link)
         return self.external_links
 
     def get_internal_links(self):
@@ -56,16 +56,15 @@ class Soup:
             current_urlparsed_obj = urlparse(self.url)
 
             for link in self.get_all_links():
-                urlparsed_obj = urlparse(link.get("href", ""))
-                if urlparsed_obj.netloc == "" or urlparsed_obj.netloc == current_urlparsed_obj.netloc :
-                    self.internal_links.add(link.get('href'))
+                urlparsed_obj = urlparse(link)
+                if urlparsed_obj.netloc == "" or urlparsed_obj.netloc == current_urlparsed_obj.netloc:
+                    self.internal_links.add(link)
         return self.internal_links
 
     def get_all_links(self):
-        if self.soup:
-            if not self.links:
-                self.links = set(self.soup.find_all('a', href=True))
-        return self.links
+        if self.soup and not self._all_links:
+            self._all_links = set(map(lambda a_element: a_element.get("href", ""), self.soup.find_all('a', href=True)))
+        return self._all_links
 
     def get_absolute_internal_links(self):
         if not self.absolute_internal_links:
