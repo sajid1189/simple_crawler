@@ -1,8 +1,14 @@
 import pika
-from settings import settings
+import sys
+import os
+
+
+sys.path.append(os.path.abspath('../'))
 
 
 def publish_outlinks(outlinks):
+    from settings import settings
+
     print("publishing {}".format(len(outlinks)))
     connection = pika.BlockingConnection(pika.ConnectionParameters(host=settings.OUTLINKS_QUEUE_IP))
     channel = connection.channel()

@@ -1,10 +1,21 @@
-from settings import settings
+import random
 import requests
 import pika
+import time
+import sys
+import os
+
+sys.path.append(os.path.abspath('../'))
+
+for p in sys.path:
+    print(p)
+
 from simple_parsers.parser import Soup
 from publishers.outlink_publisher import publish_outlinks
 from uuid import uuid4
-import time
+from settings.user_agents import USER_AGENTS
+from settings import settings
+
 
 connection = pika.BlockingConnection(pika.ConnectionParameters(host=settings.DOWNLOADABLE_QUEUE_IP))
 channel = connection.channel()
@@ -20,6 +31,25 @@ def _write(response):
         print("writing {}".format(response))
         with open("{}.html".format(uuid4()), 'w+') as f:
             f.write(response.url)
+
+
+def _request(url):
+    response = None
+
+    if settings.USE_TOR:
+        try:
+            session = requests.session()
+            session.headers = {'User-Agent': USER_AGENTS[random.randint(0, len(USER_AGENTS-1))]}
+            session.proxies = {
+                'http': 'socks5h://localhost:9050',
+                'https': 'socks5h://localhost:9050'
+            }
+            response = session.get(url)
+        except Exception as e:
+            print(e)
+    else:
+        response = requests.get(url)
+    return response
 
 
 def worker(ch, method, properties, body):
@@ -48,8 +78,9 @@ def worker(ch, method, properties, body):
             print(e)
             print(" ------ Could not write {}".format(body))
     except Exception as e:
-        print("erro {}".format(e))
+        print("error {}".format(e))
 
 
 channel.basic_consume(worker, queue=settings.DOWNLOADABLE_QUEUE)
 channel.start_consuming()
+

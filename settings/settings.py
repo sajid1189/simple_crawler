@@ -16,3 +16,5 @@ OUTLINKS_QUEUE_IP = "localhost"
 
 DOWNLOADABLE_QUEUE = "download_test_123"
 OUTLINKS_QUEUE = "outlinks_test_123"
+
+USE_TOR = True

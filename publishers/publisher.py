@@ -1,15 +1,11 @@
 import pika
-from settings import settings
+import os
+import sys
 import redis
-from settings.shared import DOWNLOADED_LINKS
 
-if __name__ == '__main__':
-    pass
-connection = pika.BlockingConnection(pika.ConnectionParameters(host=settings.OUTLINKS_QUEUE_IP))
-channel = connection.channel()
-channel.queue_declare(queue=settings.OUTLINKS_QUEUE)
+sys.path.append(os.path.abspath('../'))
 
-rds = redis.Redis(host='localhost', port=6379, db=0)
+from settings import settings
 
 
 def check_and_publish(ch, method, properties, body):
@@ -37,6 +33,10 @@ def check_and_publish(ch, method, properties, body):
     print("publishing {}".format(body))
 
 
-channel.basic_consume(check_and_publish, queue=settings.OUTLINKS_QUEUE)
-
-channel.start_consuming()
+if __name__ == '__main__':
+    connection = pika.BlockingConnection(pika.ConnectionParameters(host=settings.OUTLINKS_QUEUE_IP))
+    channel = connection.channel()
+    channel.queue_declare(queue=settings.OUTLINKS_QUEUE)
+    rds = redis.Redis(host='localhost', port=6379, db=0)
+    channel.basic_consume(check_and_publish, queue=settings.OUTLINKS_QUEUE)
+    channel.start_consuming()

@@ -1,5 +1,9 @@
 import pika
 from settings import settings
+import os
+import sys
+
+sys.path.append(os.path.abspath('../'))
 
 seeds = ["https://www.webscraper.io/test-sites"]
 
