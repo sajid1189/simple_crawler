@@ -13,16 +13,13 @@ class Soup:
         :param response: is a response of from a http request (request library).
         """
         self.html = ""
-        try:
-            self.soup = BeautifulSoup(response.content, 'html.parser')
-            self.html = response.text
-            self.external_links = set()
-            self.internal_links = set()
-            self.absolute_internal_links = set()
-            self.url = response.url
-            self._all_links = set()
-        except:
-            self.soup = None
+        self.soup = BeautifulSoup(response.content, 'html.parser')
+        self.html = response.text
+        self.external_links = set()
+        self.internal_links = set()
+        self.absolute_internal_links = set()
+        self.url = response.url
+        self._all_links = set()
 
     def get_pretty_soup(self):
         if self.soup:
@@ -63,7 +60,8 @@ class Soup:
 
     def get_all_links(self):
         if self.soup and not self._all_links:
-            self._all_links = set(map(lambda a_element: a_element.get("href", ""), self.soup.find_all('a', href=True)))
+            links = set(map(lambda a_element: a_element.get("href", ""), self.soup.find_all('a', href=True)))
+            self._all_links = list(filter(lambda x: "mailto:" not in x, links))
         return self._all_links
 
     def get_absolute_internal_links(self):
@@ -78,5 +76,5 @@ class Soup:
         for token in media_identifier_tokens:
             if url.lower().endswith(token):
                 return True
-
         return False
+

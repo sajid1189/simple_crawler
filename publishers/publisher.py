@@ -29,7 +29,7 @@ def check_and_publish(ch, method, properties, body):
         con.close()
         rds.set(body, 1)
     else:
-        print("not in set")
+        print("{} already in set".format(body))
     print("publishing {}".format(body))
 
 
