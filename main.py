@@ -10,7 +10,6 @@ if __name__ == '__main__':
     with open('seeds.txt') as f:
         for line in f:
             seeds.append(line)
-    print(seeds)
     for seed in seeds:
         connection = pika.BlockingConnection(pika.ConnectionParameters(host=settings.DOWNLOADABLE_QUEUE_IP))
         channel = connection.channel()
@@ -20,3 +19,4 @@ if __name__ == '__main__':
                               routing_key=settings.DOWNLOADABLE_QUEUE,
                               body=seed,)
         connection.close()
+    print("The following seeds have been published on the queue: {}".format(seeds))
