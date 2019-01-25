@@ -5,9 +5,12 @@ import sys
 
 sys.path.append(os.path.abspath('../'))
 
-seeds = ["https://www.webscraper.io/test-sites"]
-
 if __name__ == '__main__':
+    seeds = []
+    with open('seeds.txt') as f:
+        for line in f:
+            seeds.append(line)
+    print(seeds)
     for seed in seeds:
         connection = pika.BlockingConnection(pika.ConnectionParameters(host=settings.DOWNLOADABLE_QUEUE_IP))
         channel = connection.channel()

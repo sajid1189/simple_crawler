@@ -31,7 +31,6 @@ def _write(response):
                 print(e)
 
 
-
 def _request(url):
     response = None
 
@@ -53,7 +52,7 @@ def _request(url):
 def worker(ch, method, properties, body):
     """
     A callback function that is called when a message is received by the worker. It downloads the passed url,
-    parses the content for the outgoing links (urls), stores the content
+    parses the content for the outgoing links (urls) and stores the content in file or DB based on the storage settings
     :param ch: RabbitMQ channel
     :param method:
     :param properties:
