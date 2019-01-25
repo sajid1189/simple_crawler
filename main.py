@@ -18,6 +18,5 @@ if __name__ == '__main__':
 
         channel.basic_publish(exchange="",
                               routing_key=settings.DOWNLOADABLE_QUEUE,
-                              body=seed,
-                             )
+                              body=seed,)
         connection.close()

@@ -22,17 +22,15 @@ from settings import settings
 
 def _write(response):
     if settings.STORAGE == settings.STORAGE_OPTIONS.local_files:
-        print("writing {}".format(response))
         with open(os.path.join("content", "{}.html".format(uuid4())), 'w+') as f:
             try:
                 content = "{}\n\n {}".format(response.url, response.content)
                 f.write(content)
             except Exception as e:
-                print(e)
+                print("Exception at _write: {}".format(e))
 
 
 def _request(url):
-    response = None
 
     if settings.USE_TOR:
 
@@ -60,7 +58,7 @@ def worker(ch, method, properties, body):
     :return: None
     """
 
-    print("received url {}".format(body))
+    print("received url {} by worker".format(body))
     response = _request(body)
     soup = Soup(response)
     internal_outlinks = soup.get_absolute_internal_links()
@@ -79,4 +77,3 @@ if __name__ == "__main__":
 
     channel.basic_consume(worker, queue=settings.DOWNLOADABLE_QUEUE)
     channel.start_consuming()
-

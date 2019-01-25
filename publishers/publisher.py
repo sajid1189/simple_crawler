@@ -28,9 +28,6 @@ def check_and_publish(ch, method, properties, body):
         ch.basic_publish(exchange="", routing_key=settings.DOWNLOADABLE_QUEUE, body=body)
         con.close()
         rds.set(body, 1)
-    else:
-        print("{} already in set".format(body))
-    print("publishing {}".format(body))
 
 
 if __name__ == '__main__':
