@@ -40,7 +40,10 @@ def _get_alphanumeric_hash(url):
 
 
 if __name__ == '__main__':
-    connection = pika.BlockingConnection(pika.ConnectionParameters(host=settings.OUTLINKS_QUEUE_IP))
+    credentials = pika.PlainCredentials(settings.RMQ_USERNAME, settings.RMQ_PASSWORD)
+    connection = pika.BlockingConnection(pika.ConnectionParameters(host=settings.OUTLINKS_QUEUE_IP,
+                                                                   credentials=credentials
+                                                                   ))
     channel = connection.channel()
     channel.queue_declare(queue=settings.OUTLINKS_QUEUE)
     rds = redis.Redis(host='localhost', port=6379, db=0)
