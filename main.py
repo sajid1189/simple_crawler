@@ -11,7 +11,10 @@ if __name__ == '__main__':
         for line in f:
             seeds.append(line)
     for seed in seeds:
-        connection = pika.BlockingConnection(pika.ConnectionParameters(host=settings.DOWNLOADABLE_QUEUE_IP))
+        credentials = pika.PlainCredentials(settings.RMQ_USERNAME, settings.RMQ_PASSWORD)
+        connection = pika.BlockingConnection(pika.ConnectionParameters(host=settings.DOWNLOADABLE_QUEUE_IP,
+                                                                       credentials=credentials
+                                                                       ))
         channel = connection.channel()
         channel.queue_declare(queue=settings.DOWNLOADABLE_QUEUE)
 

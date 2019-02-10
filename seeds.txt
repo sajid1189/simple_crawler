@@ -1,3 +1,1 @@
-https://www.webscraper.io/test-sites
-http://www.wikipedia.com
-http://www.imdb.com
+https://en.wikipedia.org/wiki/Main_Page

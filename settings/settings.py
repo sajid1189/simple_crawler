@@ -18,3 +18,6 @@ DOWNLOADABLE_QUEUE = "download_test_1"
 OUTLINKS_QUEUE = "outlinks_test_1"
 
 USE_TOR = False
+
+RMQ_USERNAME = "test"
+RMQ_PASSWORD = "test"
