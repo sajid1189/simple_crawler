@@ -37,7 +37,7 @@ def check_and_publish(ch, method, properties, url):
 
 
 def _get_alphanumeric_hash(url):
-    hs = hashlib.md5(url.encode()).digest()
+    hs = hashlib.md5(url).digest()
     return base64.b64encode(hs)
 
 
