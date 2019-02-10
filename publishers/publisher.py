@@ -25,7 +25,9 @@ def check_and_publish(ch, method, properties, url):
     # Check if the link is already downloaded i.e.,if it exists in the global set
     url_hash = _get_alphanumeric_hash(url)
     if url_hash not in rds:
-        con = pika.BlockingConnection(pika.ConnectionParameters(host=settings.DOWNLOADABLE_QUEUE_IP))
+        creds = pika.PlainCredentials(settings.RMQ_USERNAME, settings.RMQ_PASSWORD)
+        con = pika.BlockingConnection(pika.ConnectionParameters(host=settings.DOWNLOADABLE_QUEUE_IP,
+                                                                credentials=creds))
         ch = con.channel()
         ch.queue_declare(queue=settings.DOWNLOADABLE_QUEUE)
 
