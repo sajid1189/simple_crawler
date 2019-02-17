@@ -4,13 +4,14 @@ import sys
 import redis
 import hashlib
 import base64
+import json
 
 sys.path.append(os.path.abspath('../'))
 
 from settings import settings
 
 
-def check_and_publish(ch, method, properties, url):
+def check_and_publish(ch, method, properties, url_chunk):
     """
     A callback function that is called when a message is received by the worker. It downloads the passed url,
     parses the content for the outgoing links (urls), stores the content
@@ -23,21 +24,38 @@ def check_and_publish(ch, method, properties, url):
     """
 
     # Check if the link is already downloaded i.e.,if it exists in the global set
-    url_hash = _get_alphanumeric_hash(url)
-    if url_hash not in rds:
+    outlinks = json.loads(url_chunk)
+    outlinks_to_be_downloaded = []
+    print("checking and publishing", url_chunk)
+    for url in outlinks:
+        url_hash = _get_alphanumeric_hash(url)
+        if url_hash not in rds:
+            outlinks_to_be_downloaded.append(url)
+            rds.set(url_hash, 1)
+
+    chunks_count = len(outlinks_to_be_downloaded) // settings.OUTLINKS_CHUNK_SIZE
+    first_index = 0
+    last_index = settings.OUTLINKS_CHUNK_SIZE
+    for i in range(chunks_count+1):
+        outlinks_bag = outlinks_to_be_downloaded[first_index: last_index]
+        first_index = last_index
+        last_index = last_index + settings.OUTLINKS_CHUNK_SIZE
+
         creds = pika.PlainCredentials(settings.RMQ_USERNAME, settings.RMQ_PASSWORD)
         con = pika.BlockingConnection(pika.ConnectionParameters(host=settings.DOWNLOADABLE_QUEUE_IP,
                                                                 credentials=creds))
         ch = con.channel()
         ch.queue_declare(queue=settings.DOWNLOADABLE_QUEUE)
 
-        ch.basic_publish(exchange="", routing_key=settings.DOWNLOADABLE_QUEUE, body=url)
+        channel.basic_publish(exchange="",
+                              routing_key=settings.DOWNLOADABLE_QUEUE,
+                              body=json.dumps(outlinks_bag),
+                              )
         con.close()
-        rds.set(url_hash, 1)
 
 
 def _get_alphanumeric_hash(url):
-    hs = hashlib.md5(url).digest()
+    hs = hashlib.md5(url.encode()).digest()
     return base64.b64encode(hs)
 
 

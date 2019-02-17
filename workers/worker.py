@@ -1,7 +1,7 @@
 import random
 import requests
 import pika
-import time
+import json
 import sys
 import os
 
@@ -57,17 +57,20 @@ def worker(ch, method, properties, body):
     :param body: message body. Typically, it the url that the worker is going to download and process
     :return: None
     """
+    print(body)
+    urls = json.loads(body)
+    print("received {} urls by worker".format(len(urls)))
+    for url in urls:
+        response = _request(url)
+        soup = Soup(response)
+        internal_outlinks = soup.get_absolute_internal_links()
+        external_outlinks = set()
+        if settings.FETCH_EXTERNAL:
+            external_outlinks = soup.get_external_links()
+        outlinks = internal_outlinks.union(external_outlinks)
 
-    print("received url {} by worker".format(body))
-    response = _request(body)
-    soup = Soup(response)
-    internal_outlinks = soup.get_absolute_internal_links()
-    external_outlinks = set()
-    if settings.FETCH_EXTERNAL:
-        external_outlinks = soup.get_external_links()
-    outlinks = internal_outlinks.union(external_outlinks)
-    publish_outlinks(outlinks)
-    _write(response)
+        publish_outlinks(outlinks)
+        _write(response)
 
 
 if __name__ == "__main__":

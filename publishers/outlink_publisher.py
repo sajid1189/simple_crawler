@@ -1,6 +1,9 @@
 import pika
 import sys
 import os
+import json
+
+from settings import settings
 
 
 sys.path.append(os.path.abspath('../'))
@@ -16,9 +19,9 @@ def publish_outlinks(outlinks):
     channel = connection.channel()
     channel.queue_declare(queue=settings.OUTLINKS_QUEUE)
 
-    for link in outlinks:
-        channel.basic_publish(exchange="",
-                              routing_key=settings.OUTLINKS_QUEUE,
-                              body=link,
-                              )
+    channel.basic_publish(exchange="",
+                          routing_key=settings.OUTLINKS_QUEUE,
+                          body=json.dumps(list(outlinks)),
+                          )
+
     connection.close()
