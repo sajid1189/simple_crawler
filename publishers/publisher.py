@@ -47,10 +47,11 @@ def check_and_publish(ch, method, properties, url_chunk):
         ch = con.channel()
         ch.queue_declare(queue=settings.DOWNLOADABLE_QUEUE)
 
-        channel.basic_publish(exchange="",
-                              routing_key=settings.DOWNLOADABLE_QUEUE,
-                              body=json.dumps(outlinks_bag),
-                              )
+        if len(outlinks_bag):
+            channel.basic_publish(exchange="",
+                                  routing_key=settings.DOWNLOADABLE_QUEUE,
+                                  body=json.dumps(outlinks_bag),
+                                  )
         con.close()
 
 
