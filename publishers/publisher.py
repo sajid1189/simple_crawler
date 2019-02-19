@@ -41,18 +41,18 @@ def check_and_publish(ch, method, properties, url_chunk):
         first_index = last_index
         last_index = last_index + settings.OUTLINKS_CHUNK_SIZE
 
-        creds = pika.PlainCredentials(settings.RMQ_USERNAME, settings.RMQ_PASSWORD)
-        con = pika.BlockingConnection(pika.ConnectionParameters(host=settings.DOWNLOADABLE_QUEUE_IP,
-                                                                credentials=creds))
-        ch = con.channel()
-        ch.queue_declare(queue=settings.DOWNLOADABLE_QUEUE)
-
         if len(outlinks_bag):
+            creds = pika.PlainCredentials(settings.RMQ_USERNAME, settings.RMQ_PASSWORD)
+            con = pika.BlockingConnection(pika.ConnectionParameters(host=settings.DOWNLOADABLE_QUEUE_IP,
+                                                                    credentials=creds))
+            ch = con.channel()
+            ch.queue_declare(queue=settings.DOWNLOADABLE_QUEUE)
+
             channel.basic_publish(exchange="",
                                   routing_key=settings.DOWNLOADABLE_QUEUE,
                                   body=json.dumps(outlinks_bag),
                                   )
-        con.close()
+            con.close()
 
 
 def _get_alphanumeric_hash(url):
