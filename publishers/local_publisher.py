@@ -1,0 +1,66 @@
+import pika
+import os
+import sys
+import redis
+import hashlib
+import base64
+import json
+
+sys.path.append(os.path.abspath('../'))
+
+from settings import settings
+
+
+def publish_to_global_form_local(ch, method, properties, url_chunk):
+    """
+    A callback function that is called when a message is received by the worker. It downloads the passed url,
+    parses the content for the outgoing links (urls), stores the content
+    :param ch: RabbitMQ channel
+    :param method:
+    :param properties:
+    :param url: The message body of RabbitMQ message. Typically, it is
+     the url that the worker is going to download and process
+    :return: None
+    """
+    global rds, link_bucket
+    # Check if the link is already downloaded i.e.,if it exists in the global set
+    links = json.loads(url_chunk)
+
+    refined_links = []
+    for link in links:
+        url_hash = _get_alphanumeric_hash(link)
+        if url_hash not in rds:
+            refined_links.append(link)
+            rds.set(url_hash, 1)
+    link_bucket += refined_links
+    if len(link_bucket) < settings.LOCAL_CHUNK_SIZE:
+        return
+    print("checking and publishing", len(link_bucket))
+
+    creds = pika.PlainCredentials(settings.RMQ_USERNAME, settings.RMQ_PASSWORD)
+    con = pika.BlockingConnection(pika.ConnectionParameters(host=settings.OUTLINKS_QUEUE_IP,
+                                                            credentials=creds))
+    ch = con.channel()
+    ch.queue_declare(queue=settings.OUTLINKS_QUEUE)
+
+    channel.basic_publish(exchange="",
+                          routing_key=settings.OUTLINKS_QUEUE,
+                          body=json.dumps(link_bucket),
+                          )
+    con.close()
+
+
+def _get_alphanumeric_hash(url):
+    hs = hashlib.md5(url.encode()).digest()
+    return base64.b64encode(hs)
+
+
+if __name__ == '__main__':
+    credentials = pika.PlainCredentials(settings.RMQ_USERNAME, settings.RMQ_PASSWORD)
+    connection = pika.BlockingConnection(pika.ConnectionParameters(host=settings.LOCAL_PUBLISHER_QUEUE))
+    channel = connection.channel()
+    channel.queue_declare(queue=settings.LOCAL_PUBLISHER_QUEUE)
+    rds = redis.Redis(host='localhost', port=6379, db=0)
+    link_bucket = []
+    channel.basic_consume(publish_to_global_form_local(), queue=settings.LOCAL_PUBLISHER_QUEUE)
+    channel.start_consuming()

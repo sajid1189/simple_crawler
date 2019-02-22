@@ -26,7 +26,7 @@ def check_and_publish(ch, method, properties, url_chunk):
     # Check if the link is already downloaded i.e.,if it exists in the global set
     outlinks = json.loads(url_chunk)
     outlinks_to_be_downloaded = []
-    print("checking and publishing", len(url_chunk))
+    print("checking and publishing", len(outlinks))
     for url in outlinks:
         url_hash = _get_alphanumeric_hash(url)
         if url_hash not in rds:

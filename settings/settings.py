@@ -17,9 +17,12 @@ OUTLINKS_QUEUE_IP = "157.230.237.143"
 DOWNLOADABLE_QUEUE = "download_test_1"
 OUTLINKS_QUEUE = "outlinks_test_1"
 
+LOCAL_PUBLISHER_QUEUE = 'localhost'  # Always localhost.
+
 USE_TOR = False
 
 RMQ_USERNAME = "test"
 RMQ_PASSWORD = "test"
 
 OUTLINKS_CHUNK_SIZE = 20
+LOCAL_CHUNK_SIZE = 100
