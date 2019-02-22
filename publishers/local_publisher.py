@@ -63,5 +63,5 @@ if __name__ == '__main__':
     channel.queue_declare(queue=settings.LOCAL_OUTLINKS_QUEUE)
     rds = redis.Redis(host='localhost', port=6379, db=0)
     link_bucket = []
-    channel.basic_consume(publish_to_global_form_local(), queue=settings.LOCAL_OUTLINKS_QUEUE)
+    channel.basic_consume(publish_to_global_form_local, queue=settings.LOCAL_OUTLINKS_QUEUE)
     channel.start_consuming()
