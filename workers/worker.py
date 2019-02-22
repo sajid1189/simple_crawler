@@ -59,7 +59,9 @@ def worker(ch, method, properties, body):
     """
     print(body)
     urls = json.loads(body)
+    urls = list(filter(lambda x: x.startswith('http'), urls))
     print("received {} urls by worker".format(len(urls)))
+
     for url in urls:
         response = _request(url)
         soup = Soup(response)
