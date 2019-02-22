@@ -29,7 +29,7 @@ def publish_outlinks_to_local_queue(outlinks):
         body = json.dumps(outlinks)
     else:
         body = json.dumps(list(outlinks))
-    print("publishing {}".format(len(outlinks)))
+    print("publishing to local q {}".format(len(outlinks)))
     connection = pika.BlockingConnection(pika.ConnectionParameters(host=settings.LOCAL_OUTLINKS_QUEUE_IP))
     channel = connection.channel()
     channel.queue_declare(queue=settings.LOCAL_OUTLINKS_QUEUE)
