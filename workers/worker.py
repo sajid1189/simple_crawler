@@ -9,7 +9,7 @@ sys.path.append(os.path.abspath('../'))
 
 
 from simple_parsers.parser import Soup
-from publishers.outlink_publisher import publish_outlinks
+from publishers.outlink_publisher import publish_outlinks, publish_outlinks_to_local_queue
 from uuid import uuid4
 from settings.user_agents import USER_AGENTS
 from settings import settings
@@ -70,9 +70,11 @@ def worker(ch, method, properties, body):
         if settings.FETCH_EXTERNAL:
             external_outlinks = soup.get_external_links()
         outlinks = internal_outlinks.union(external_outlinks)
-
-        publish_outlinks(outlinks)
         _write(response)
+        if not settings.LOCAL_STRATEGY:
+            publish_outlinks(outlinks)
+        else:
+            publish_outlinks_to_local_queue(outlinks)
 
 
 if __name__ == "__main__":

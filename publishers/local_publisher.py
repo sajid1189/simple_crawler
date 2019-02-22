@@ -18,8 +18,8 @@ def publish_to_global_form_local(ch, method, properties, url_chunk):
     :param ch: RabbitMQ channel
     :param method:
     :param properties:
-    :param url: The message body of RabbitMQ message. Typically, it is
-     the url that the worker is going to download and process
+    :param url_chunk: The message body of RabbitMQ message. It is
+     a list of urls in json format
     :return: None
     """
     global rds, link_bucket
@@ -35,7 +35,7 @@ def publish_to_global_form_local(ch, method, properties, url_chunk):
     link_bucket += refined_links
     if len(link_bucket) < settings.LOCAL_CHUNK_SIZE:
         return
-    print("checking and publishing", len(link_bucket))
+    print("local publisher is publishing", len(link_bucket))
 
     creds = pika.PlainCredentials(settings.RMQ_USERNAME, settings.RMQ_PASSWORD)
     con = pika.BlockingConnection(pika.ConnectionParameters(host=settings.OUTLINKS_QUEUE_IP,
@@ -48,6 +48,7 @@ def publish_to_global_form_local(ch, method, properties, url_chunk):
                           body=json.dumps(link_bucket),
                           )
     con.close()
+    link_bucket = []
 
 
 def _get_alphanumeric_hash(url):
@@ -57,10 +58,10 @@ def _get_alphanumeric_hash(url):
 
 if __name__ == '__main__':
     credentials = pika.PlainCredentials(settings.RMQ_USERNAME, settings.RMQ_PASSWORD)
-    connection = pika.BlockingConnection(pika.ConnectionParameters(host=settings.LOCAL_PUBLISHER_QUEUE))
+    connection = pika.BlockingConnection(pika.ConnectionParameters(host=settings.LOCAL_OUTLINKS_QUEUE_IP))
     channel = connection.channel()
-    channel.queue_declare(queue=settings.LOCAL_PUBLISHER_QUEUE)
+    channel.queue_declare(queue=settings.LOCAL_OUTLINKS_QUEUE)
     rds = redis.Redis(host='localhost', port=6379, db=0)
     link_bucket = []
-    channel.basic_consume(publish_to_global_form_local(), queue=settings.LOCAL_PUBLISHER_QUEUE)
+    channel.basic_consume(publish_to_global_form_local(), queue=settings.LOCAL_OUTLINKS_QUEUE)
     channel.start_consuming()
