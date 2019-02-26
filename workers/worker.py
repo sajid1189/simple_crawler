@@ -69,7 +69,7 @@ def worker(ch, method, properties, body):
         external_outlinks = set()
         if settings.FETCH_EXTERNAL:
             external_outlinks = soup.get_external_links()
-        outlinks = internal_outlinks.union(external_outlinks)
+        outlinks = list(internal_outlinks.union(external_outlinks))
         _write(response)
         if not settings.LOCAL_STRATEGY:
             publish_outlinks(outlinks)

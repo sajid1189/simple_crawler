@@ -24,31 +24,36 @@ def publish_to_global_form_local(ch, method, properties, url_chunk):
     """
     global rds, link_bucket
     # Check if the link is already downloaded i.e.,if it exists in the global set
-    links = json.loads(url_chunk)
+    urls = json.loads(url_chunk)
 
     refined_links = []
-    for link in links:
-        url_hash = _get_alphanumeric_hash(link)
+    for url in urls:
+        url_hash = _get_alphanumeric_hash(url)
         if url_hash not in rds:
-            refined_links.append(link)
+            refined_links.append(url)
             rds.set(url_hash, 1)
+    print(refined_links)
+    print('-------------')
+    print(link_bucket)
     link_bucket += refined_links
-    if len(link_bucket) < settings.LOCAL_CHUNK_SIZE:
-        return
-    print("local publisher is publishing", len(link_bucket))
+    if len(link_bucket) > settings.LOCAL_CHUNK_SIZE:
 
-    creds = pika.PlainCredentials(settings.RMQ_USERNAME, settings.RMQ_PASSWORD)
-    con = pika.BlockingConnection(pika.ConnectionParameters(host=settings.OUTLINKS_QUEUE_IP,
-                                                            credentials=creds))
-    ch = con.channel()
-    ch.queue_declare(queue=settings.OUTLINKS_QUEUE)
+        print("local publisher is publishing", len(link_bucket))
 
-    channel.basic_publish(exchange="",
-                          routing_key=settings.OUTLINKS_QUEUE,
-                          body=json.dumps(link_bucket),
-                          )
-    con.close()
-    link_bucket = []
+        creds = pika.PlainCredentials(settings.RMQ_USERNAME, settings.RMQ_PASSWORD)
+        con = pika.BlockingConnection(pika.ConnectionParameters(host=settings.OUTLINKS_QUEUE_IP,
+                                                                credentials=creds))
+        ch = con.channel()
+        ch.queue_declare(queue=settings.OUTLINKS_QUEUE)
+
+        channel.basic_publish(exchange="",
+                              routing_key=settings.OUTLINKS_QUEUE,
+                              body=json.dumps(link_bucket),
+                              )
+        con.close()
+        link_bucket = []
+    else:
+        print("link bucket is not big enough", len(link_bucket))
 
 
 def _get_alphanumeric_hash(url):
