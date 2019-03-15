@@ -32,9 +32,6 @@ def publish_to_global_form_local(ch, method, properties, url_chunk):
         if url_hash not in rds:
             refined_links.append(url)
             rds.set(url_hash, 1)
-    print('refined links', refined_links)
-    print('-------------')
-    print(link_bucket)
     link_bucket += refined_links
     if len(link_bucket) > settings.LOCAL_CHUNK_SIZE:
 

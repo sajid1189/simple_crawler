@@ -57,7 +57,6 @@ def worker(ch, method, properties, body):
     :param body: message body. Typically, it the url that the worker is going to download and process
     :return: None
     """
-    print(body)
     urls = json.loads(body)
     urls = list(filter(lambda x: x.startswith('http'), urls))
     print("received {} urls by worker".format(len(urls)))
