@@ -32,7 +32,7 @@ def publish_to_global_form_local(ch, method, properties, url_chunk):
         if url_hash not in rds:
             refined_links.append(url)
             rds.set(url_hash, 1)
-    print(refined_links)
+    print('refined links', refined_links)
     print('-------------')
     print(link_bucket)
     link_bucket += refined_links
@@ -46,10 +46,10 @@ def publish_to_global_form_local(ch, method, properties, url_chunk):
         ch = con.channel()
         ch.queue_declare(queue=settings.OUTLINKS_QUEUE)
 
-        channel.basic_publish(exchange="",
-                              routing_key=settings.OUTLINKS_QUEUE,
-                              body=json.dumps(link_bucket),
-                              )
+        ch.basic_publish(exchange="",
+                         routing_key=settings.OUTLINKS_QUEUE,
+                         body=json.dumps(link_bucket),
+                        )
         con.close()
         link_bucket = []
     else:
