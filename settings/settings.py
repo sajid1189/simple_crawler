@@ -15,9 +15,9 @@ DOWNLOADABLE_QUEUE_IP = "198.211.105.44"
 OUTLINKS_QUEUE_IP = "198.211.105.44"
 LOCAL_OUTLINKS_QUEUE_IP = "localhost"
 
-DOWNLOADABLE_QUEUE = "download_test_2"
-OUTLINKS_QUEUE = "outlinks_test_2"
-LOCAL_OUTLINKS_QUEUE = 'outlinks_local_2'
+DOWNLOADABLE_QUEUE = "download_test_211"
+OUTLINKS_QUEUE = "outlinks_test_211"
+LOCAL_OUTLINKS_QUEUE = 'outlinks_local_211'
 
 USE_TOR = False
 
