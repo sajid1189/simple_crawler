@@ -21,7 +21,7 @@ from settings import settings
 
 
 def _write(response):
-    if settings.STORAGE == settings.STORAGE_OPTIONS.local_files:
+    if settings.STORAGE == settings.StorageOptions.local_files:
         with open(os.path.join("content", "{}.html".format(uuid4())), 'w+') as f:
             try:
                 content = "{}\n\n {}".format(response.url, response.content)
