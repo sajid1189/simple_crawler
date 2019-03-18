@@ -1,3 +1,3 @@
-# simple_crawler
+# A simple yet scalable (distributed) web crawler.
 
-Coming soon..
+Coming soon........
