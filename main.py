@@ -3,8 +3,12 @@ from settings import settings
 import os
 import json
 import sys
+import time
 
 sys.path.append(os.path.abspath('../'))
+
+from workers.worker import Worker
+
 
 if __name__ == '__main__':
     seeds = []
@@ -27,3 +31,20 @@ if __name__ == '__main__':
                           body=json.dumps(seeds),)
     connection.close()
     print("The following seeds have been published on the queue: {}".format(seeds))
+
+    worker_list = []
+    for _ in range(settings.MAX_ACTIVE_WORKERS):
+        worker = Worker()
+        worker_list.append(worker)
+        worker.start()
+
+    while True:
+        for worker in worker_list:
+            if not worker.is_alive():
+                print("a worker just died :(")
+                worker_list.remove(worker)
+        for i in range(settings.MAX_ACTIVE_WORKERS - len(worker_list)):
+            worker = Worker()
+            worker_list.append(worker)
+            worker.start()
+        time.sleep(10)
