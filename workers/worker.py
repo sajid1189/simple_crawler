@@ -74,7 +74,8 @@ class Worker(multiprocessing.Process):
 
     def _write(self, response):
         if settings.STORAGE == settings.STORAGE_OPTIONS.local_files:
-            with open(os.path.join("content", "{}.html".format(uuid4())), 'w+') as f:
+            this_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+            with open(os.path.join(this_dir, "content", "{}.html".format(uuid4())), 'w+') as f:
                 try:
                     content = "{}\n\n {}".format(response.url, response.content)
                     f.write(content)
