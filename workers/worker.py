@@ -80,4 +80,3 @@ class Worker(multiprocessing.Process):
                     f.write(content)
                 except Exception as e:
                     print("Exception at _write: {}".format(e))
-

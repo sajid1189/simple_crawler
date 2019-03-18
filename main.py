@@ -16,7 +16,6 @@ if __name__ == '__main__':
         for line in f:
             if line.startswith('http'):
                 seeds.append(line.rstrip())
-    print(seeds)
     if not seeds:
         raise ValueError("Check the seeds.txt. The seeds are not in correct form or the file is empty")
     credentials = pika.PlainCredentials(settings.RMQ_USERNAME, settings.RMQ_PASSWORD)
