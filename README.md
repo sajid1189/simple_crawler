@@ -21,3 +21,5 @@ It is a Python process. Keeps listening to OUTLINKS_QUEUE. Whenever there is a n
 
 ### Workers: 
 A worker is a Python process that downloads a web page, parses it, stores the content, lists the outlinks (urls) on the downloaded page and publishes the outlinks to the central OUTLINKS_QUEUE
+
+# To be continued...........
