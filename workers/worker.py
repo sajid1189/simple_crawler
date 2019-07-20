@@ -73,7 +73,7 @@ class Worker(multiprocessing.Process):
         return response
 
     def _write(self, response):
-        if settings.STORAGE == settings.STORAGE_OPTIONS.local_files:
+        if settings.STORAGE == settings.StorageOptions.local_files:
             this_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
             with open(os.path.join(this_dir, "workers", "content", "{}.html".format(uuid4())), 'w+') as f:
                 try:
