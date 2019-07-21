@@ -1,5 +1,10 @@
-beautifulsoup4
-requests
-pika
-redis
-pysocks
+beautifulsoup4==4.8.0
+certifi==2019.6.16
+chardet==3.0.4
+idna==2.8
+pika==1.1.0
+PySocks==1.7.0
+redis==3.2.1
+requests==2.0.0
+soupsieve==1.9.2
+urllib3==1.25.3
