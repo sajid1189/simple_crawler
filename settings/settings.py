@@ -11,13 +11,13 @@ STORAGE = StorageOptions.local_files
 
 FETCH_EXTERNAL = False
 
-DOWNLOADABLE_QUEUE_IP = ""
-OUTLINKS_QUEUE_IP = ""
+DOWNLOADABLE_QUEUE_IP = "localhost"
+OUTLINKS_QUEUE_IP = "localhost"
 LOCAL_OUTLINKS_QUEUE_IP = "localhost"
 
 DOWNLOADABLE_QUEUE = "downloadable"
 OUTLINKS_QUEUE = "outlinks"
-LOCAL_OUTLINKS_QUEUE = 'outlinks'
+LOCAL_OUTLINKS_QUEUE = 'local_outlinks'
 
 USE_TOR = False
 

@@ -68,5 +68,8 @@ if __name__ == '__main__':
     channel = connection.channel()
     channel.queue_declare(queue=settings.OUTLINKS_QUEUE)
     rds = redis.Redis(host='localhost', port=6379, db=0)
-    channel.basic_consume(check_and_publish, queue=settings.OUTLINKS_QUEUE)
+    channel.basic_consume(settings.OUTLINKS_QUEUE, check_and_publish)
     channel.start_consuming()
+
+
+
