@@ -4,12 +4,16 @@
 ### Install RabbitMQ
 for Mac run the following on terminal
 `brew install rabbitmq`
+
+### Install Redis
+
 ### Install the python packages
 Navigate to the `requirements.txt` file and run
 `pip install -r requirements.txt`
 
 ## How to run the cralwler 
 ###### Wirte the starting urls that you want to start with in seeds.txt file.
+###### Run `RabbitMQ` and `Redis`
 ###### Run  `main.py` file. This will push the seeds to the Downloadable queue.
 ###### Run  `worker.py`
 ###### Run  `publishe.py`
