@@ -16,7 +16,9 @@ Navigate to the `requirements.txt` file and run
 ###### Run `RabbitMQ` and `Redis`
 ###### Run  `main.py` file. This will push the seeds to the Downloadable queue.
 ###### Run  `worker.py`
-###### Run  `publishe.py`
+###### Run  `publisher.py`
+###### Run  `local_publisher.py`
+
 
 ### To check if if everything is working go to `/simple_crawler/workers/content/` . Downloaded html files should be written here.
 
