@@ -5,10 +5,16 @@
 for Mac run the following on terminal
 `brew install rabbitmq`
 ### Install the python packages
-Navigate to the `requirements.txt' file and run
+Navigate to the `requirements.txt` file and run
 `pip install -r requirements.txt`
 
+## How to run the cralwler 
+### Wirte the starting urls that you want to start with in seeds.txt file.
+### Run  `main.py` file. This will push the seeds to the Downloadable queue.
+### Run  `worker.py`
+### Run  `publishe.py`
 
+### To check if if everything is working go to `/simple_crawler/workers/content/` . Downloaded html files should be written here.
 
 <img src="https://github.com/sajid1189/simple_crawler/blob/develop/structure.png">
 
