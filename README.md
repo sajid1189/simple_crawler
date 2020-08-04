@@ -13,6 +13,7 @@ Navigate to the `requirements.txt` file and run
 
 ## How to run the cralwler 
 ###### Wirte the starting urls that you want to start with in seeds.txt file.
+###### Run `RabbitMQ` and `Redis`
 ###### Run  `main.py` file. This will push the seeds to the Downloadable queue.
 ###### Run  `worker.py`
 ###### Run  `publishe.py`
