@@ -9,10 +9,10 @@ Navigate to the `requirements.txt` file and run
 `pip install -r requirements.txt`
 
 ## How to run the cralwler 
-### Wirte the starting urls that you want to start with in seeds.txt file.
-### Run  `main.py` file. This will push the seeds to the Downloadable queue.
-### Run  `worker.py`
-### Run  `publishe.py`
+###### Wirte the starting urls that you want to start with in seeds.txt file.
+###### Run  `main.py` file. This will push the seeds to the Downloadable queue.
+###### Run  `worker.py`
+###### Run  `publishe.py`
 
 ### To check if if everything is working go to `/simple_crawler/workers/content/` . Downloaded html files should be written here.
 
