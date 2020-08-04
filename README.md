@@ -1,6 +1,14 @@
 # A simple yet scalable (distributed) web crawler.
 
-Coming soon........
+## Requirements
+### Install RabbitMQ
+for Mac run the following on terminal
+`brew install rabbitmq`
+### Install the python packages
+Navigate to the `requirements.txt' file and run
+`pip install -r requirements.txt`
+
+
 
 <img src="https://github.com/sajid1189/simple_crawler/blob/develop/structure.png">
 
