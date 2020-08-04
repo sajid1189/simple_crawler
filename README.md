@@ -4,6 +4,9 @@
 ### Install RabbitMQ
 for Mac run the following on terminal
 `brew install rabbitmq`
+
+### Install Redis
+
 ### Install the python packages
 Navigate to the `requirements.txt` file and run
 `pip install -r requirements.txt`
