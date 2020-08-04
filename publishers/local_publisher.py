@@ -34,12 +34,8 @@ def publish_to_global_form_local(ch, method, properties, url_chunk):
             rds.set(url_hash, 1)
     link_bucket += refined_links
     if len(link_bucket) > settings.LOCAL_CHUNK_SIZE:
-
         print("local publisher is publishing", len(link_bucket))
-
-        creds = pika.PlainCredentials(settings.RMQ_USERNAME, settings.RMQ_PASSWORD)
-        con = pika.BlockingConnection(pika.ConnectionParameters(host=settings.OUTLINKS_QUEUE_IP,
-                                                                credentials=creds))
+        con = pika.BlockingConnection(pika.ConnectionParameters(host=settings.OUTLINKS_QUEUE_IP))
         ch = con.channel()
         ch.queue_declare(queue=settings.OUTLINKS_QUEUE)
 
