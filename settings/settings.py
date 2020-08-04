@@ -1,4 +1,5 @@
 from enum import Enum
+import os
 
 
 class StorageOptions(Enum):
@@ -11,8 +12,8 @@ STORAGE = StorageOptions.local_files
 
 FETCH_EXTERNAL = False
 
-DOWNLOADABLE_QUEUE_IP = "178.62.254.140"
-OUTLINKS_QUEUE_IP = "178.62.254.140"
+DOWNLOADABLE_QUEUE_IP = os.getenv("DOWNLOADABLE_QUEUE_IP", "localhost")
+OUTLINKS_QUEUE_IP = os.getenv("OUTLINKS_QUEUE_IP", "localhost")
 LOCAL_OUTLINKS_QUEUE_IP = "localhost"
 
 DOWNLOADABLE_QUEUE = "downloadable"
@@ -24,9 +25,9 @@ USE_TOR = False
 RMQ_USERNAME = "test"
 RMQ_PASSWORD = "test"
 
-OUTLINKS_CHUNK_SIZE = 20
-LOCAL_CHUNK_SIZE = 1
+OUTLINKS_CHUNK_SIZE = 5
+LOCAL_CHUNK_SIZE = 2
 
 LOCAL_STRATEGY = True
 
-MAX_ACTIVE_WORKERS = 10
+MAX_ACTIVE_WORKERS = 5
